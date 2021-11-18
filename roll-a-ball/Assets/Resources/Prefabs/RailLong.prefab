@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3744127385673201510}
   - component: {fileID: 3744127385673201509}
   - component: {fileID: 3744127385673201508}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,7 +106,7 @@ GameObject:
   - component: {fileID: 3744127385870664325}
   - component: {fileID: 3744127385870664324}
   - component: {fileID: 3744127385870664323}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cylinder (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -197,7 +197,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7731714659875220484}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: RailLong
   m_TagString: Untagged
   m_Icon: {fileID: 0}

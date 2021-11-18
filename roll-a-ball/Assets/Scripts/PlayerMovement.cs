@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
 {
     [HideInInspector]
     public Rigidbody rb;
-    private int score;
+    private GameControl controller;
     //public float speed;
     private float sX = 0;
     private float sY = 2;
@@ -28,6 +28,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        controller = FindObjectOfType<GameControl>();
     }
 
     // Update is called once per frame
@@ -41,7 +42,8 @@ public class PlayerMovement : MonoBehaviour
         if (other.transform.CompareTag("Pickup"))
         {
             other.gameObject.SetActive(false);
-            score += 1;
+            controller.collected++;
+            controller.score += 100;
         }
 
         if (other.transform.CompareTag("Death"))
@@ -64,15 +66,19 @@ public class PlayerMovement : MonoBehaviour
 
     public void Move(float verticalTilt, float horizontalTilt, Vector3 right)
     {
+        var tempMoveForce = moveForce;
         // Only apply movement when the player is grounded
-        //if (OnGround())
+        if (!OnGround()) 
+        {
+            tempMoveForce = tempMoveForce * .2f;
+        }
         //{
             CalculateFloorNormal();
 
             // No input from player
             if (horizontalTilt == 0.0f && verticalTilt == 0.0f && rb.velocity.magnitude > 0.0f)
             {
-                rb.velocity = Vector3.Lerp(rb.velocity, Vector3.zero, moveForce * 0.1f * Time.deltaTime); // Slow down
+                rb.velocity = Vector3.Lerp(rb.velocity, Vector3.zero, tempMoveForce * 0.1f * Time.deltaTime); // Slow down
             }
             else
             {
@@ -80,9 +86,9 @@ public class PlayerMovement : MonoBehaviour
                 Vector3 forward = Vector3.Cross(right, floorNormal);
 
                 // Apply moveForce scaled by verticalTilt in the forward direction (Half the move force when moving backwards)
-                Vector3 forwardForce = (verticalTilt > 0.0f ? 1.0f : 0.5f) * moveForce * verticalTilt * forward;
+                Vector3 forwardForce = (verticalTilt > 0.0f ? 1.0f : 0.5f) * tempMoveForce * verticalTilt * forward;
                 // Apply moveForce scaled by horizontalTilt in the right direction
-                Vector3 rightForce = moveForce * horizontalTilt * right;
+                Vector3 rightForce = tempMoveForce * horizontalTilt * right;
 
                 Vector3 forceVector = forwardForce + rightForce;
 
@@ -93,7 +99,7 @@ public class PlayerMovement : MonoBehaviour
 
     public bool OnGround()
     {
-        return Physics.CheckSphere(transform.position - (Vector3.up * 0.5f), groundCheckRadius, whatIsGround);
+        return Physics.CheckSphere(transform.position - (Vector3.up * 0.6f), groundCheckRadius, whatIsGround);
     }
 
     private void CalculateFloorNormal()
