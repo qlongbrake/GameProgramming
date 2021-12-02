@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
 {
     [HideInInspector]
     public Rigidbody rb;
+    public float gravityMultiplier = 1.5f;
     private GameControl controller;
     //public float speed;
     private float sX = 0;
@@ -22,6 +23,8 @@ public class PlayerMovement : MonoBehaviour
     public float maxSpeed;
     [SerializeField]
     private float moveForce;
+
+    
 
 
     // Start is called before the first frame update
@@ -51,18 +54,37 @@ public class PlayerMovement : MonoBehaviour
             transform.position = new Vector3(sX, sY, sZ);
             //SceneManager.LoadScene(0);
         }
+
+        if (other.transform.CompareTag("MovingPlatform"))
+        {
+            //transform.SetParent(other.transform.parent, true);
+        }
     }
-    /*
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.transform.CompareTag("MovingPlatform"))
+        {
+            //transform.SetParent(null);
+            //transform.localScale = new Vector3(1, 1, 1);
+        }    
+    }
+
     void FixedUpdate()
     {
+        /*
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
 
         Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
 
         rb.AddForce(movement * speed);
+        */
+        if (!OnGround())
+        {
+            rb.AddForce(Physics.gravity * gravityMultiplier, ForceMode.Acceleration);
+        }
     }
-    */
 
     public void Move(float verticalTilt, float horizontalTilt, Vector3 right)
     {
